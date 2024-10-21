@@ -1,0 +1,54 @@
+.carouselContainer {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  overflow: hidden;
+  position: relative;
+}
+
+.carouselContainer::before,
+.carouselContainer::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 100px;
+  height: 100%;
+  z-index: 2;
+}
+
+.carouselContainer::before {
+  left: 0;
+  background: linear-gradient(to right, white, transparent);
+}
+
+.carouselContainer::after {
+  right: 0;
+  background: linear-gradient(to left, white, transparent);
+}
+
+.carouselTrack {
+  display: flex;
+  width: 200%; /* Double the width to accommodate two sets of logos */
+  animation: carousel 30s linear infinite;
+}
+
+.carouselSlide {
+  flex: 0 0 calc(100% / 12); /* Adjust based on the number of logos */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes carousel {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Pause animation on hover */
+.carouselContainer:hover .carouselTrack {
+  animation-play-state: paused;
+}
