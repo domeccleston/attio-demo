@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import styles from './CarouselStyles.module.css';
+import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 
-import { SignInButton } from '@clerk/nextjs';
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [carouselPosition, setCarouselPosition] = useState(0);
@@ -51,10 +51,18 @@ export default function HomePage() {
               Star
               <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-gray-100 rounded-full">9.2k</span>
             </a>
-            <Link href="/signin" className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-              <SignInButton>Sign in</SignInButton>
+
+            <SignedOut>
+              <Link href="/sign-in" className="inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 ">
+              Sign in
             </Link>
-            <Link href="/signup" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-gray-800">
+            </SignedOut>
+            <SignedIn>
+            <Link href="/dashboard" className="inline-flex justify-center items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 ">
+              Home
+            </Link>
+            </SignedIn>
+            <Link href="/sign-up" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-gray-800">
               Sign up
             </Link>
           </div>
@@ -124,7 +132,7 @@ export default function HomePage() {
           {" "}modern ML teams
         </span>
       </h1>
-      <p className="text-md md:text-lg lg:text-xl text-center text-gray-700 max-w-2xl mx-auto mb-10">
+      <p className="text-md md:text-lg lg:text-xl text-center text-gray-700 max-w-2xl mx-auto mb-8">
         Inference at scale, in our cloud or yours. Built for performance, security, and reliability—with a developer experience you'll love.
       </p>
       <div className="flex justify-center space-x-4">
@@ -136,7 +144,7 @@ export default function HomePage() {
         </Link>
       </div>
       <div className="mt-16 mb-20">
-        <p className="text-center text-lg font-medium text-gray-600 mb-14">
+        <p className="text-center text-lg text-gray-700 mb-14">
           Trusted in production by the best ML engineers in the world, from startups to Fortune 500s
         </p>
         <div className={styles.carouselContainer}>
