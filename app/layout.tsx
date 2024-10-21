@@ -1,7 +1,16 @@
+
 import type { Metadata } from "next";
 import { Instrument_Sans } from "next/font/google";
-import localFont from "next/font/local";
+
 import "./globals.css";
+
+import {
+  ClerkProvider,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton
+} from '@clerk/nextjs'
 
 const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
@@ -9,7 +18,7 @@ const instrumentSans = Instrument_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "FlowMate",
+  title: "ModelFlow",
 };
 
 export default function RootLayout({
@@ -18,12 +27,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${instrumentSans.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body>
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

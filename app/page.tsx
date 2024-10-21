@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import styles from './CarouselStyles.module.css';
 
+import { SignInButton } from '@clerk/nextjs';
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [carouselPosition, setCarouselPosition] = useState(0);
@@ -51,7 +52,7 @@ export default function HomePage() {
               <span className="ml-2 px-2 py-0.5 text-xs font-medium bg-gray-100 rounded-full">9.2k</span>
             </a>
             <Link href="/signin" className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-              Sign in
+              <SignInButton>Sign in</SignInButton>
             </Link>
             <Link href="/signup" className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-black hover:bg-gray-800">
               Sign up
