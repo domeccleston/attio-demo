@@ -6,7 +6,6 @@ import { useState } from 'react'
 import Link from 'next/link';
 
 const tabs = ['Models', 'Logs', 'Environments', 'Integrations', 'Monitoring']
-const environments = ['main', 'staging', 'development']
 
 // Add this new interface for the model type
 interface Model {
@@ -77,10 +76,8 @@ function CircularGauge({ value, size = 40 }: { value: number, size?: number }) {
 
 export default function Dashboard() {
   const [isWorkspaceDropdownOpen, setIsWorkspaceDropdownOpen] = useState(false)
-  const [isEnvironmentDropdownOpen, setIsEnvironmentDropdownOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('Models')
   const [selectedWorkspace, setSelectedWorkspace] = useState('Personal Account')
-  const [selectedEnvironment, setSelectedEnvironment] = useState('main')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   return (
