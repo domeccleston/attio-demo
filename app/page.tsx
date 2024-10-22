@@ -7,6 +7,7 @@ import {  SignedIn, SignedOut } from '@clerk/nextjs'
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // @ts-ignore
   const [_, setCarouselPosition] = useState(0);
 
   useEffect(() => {
@@ -133,7 +134,7 @@ export default function HomePage() {
         </span>
       </h1>
       <p className="text-md md:text-lg lg:text-xl text-center text-gray-700 max-w-2xl mx-auto mb-8">
-        Inference at scale, in our cloud or yours. Built for performance, security, and reliability—with a developer experience you'll love.
+        Inference at scale, in our cloud or yours. Built for performance, security, and reliability—with a developer experience you&apos;ll love.
       </p>
       <div className="flex justify-center space-x-4">
         <Link href="/signup" className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-black hover:bg-gray-800">
