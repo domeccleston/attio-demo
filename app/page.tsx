@@ -3,11 +3,11 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import styles from './CarouselStyles.module.css';
-import { ClerkProvider, SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
+import {  SignedIn, SignedOut } from '@clerk/nextjs'
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [carouselPosition, setCarouselPosition] = useState(0);
+  const [_, setCarouselPosition] = useState(0);
 
   useEffect(() => {
     const interval = setInterval(() => {
