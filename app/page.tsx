@@ -7,8 +7,9 @@ import {  SignedIn, SignedOut } from '@clerk/nextjs'
 
 export default function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // @ts-ignore
   const [_, setCarouselPosition] = useState(0);
+
+  console.log(_)
 
   useEffect(() => {
     const interval = setInterval(() => {
