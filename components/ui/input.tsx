@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils"
 
 
 const Input = (
-  ({ className, type, ...props }, ref) => {
+  ({ className, type, ref, ...props }: any) => {
     return (
       <input
         type={type}
