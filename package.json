@@ -10,12 +10,15 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.7.5",
+    "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-slot": "^1.1.0",
     "class-variance-authority": "^0.7.0",
     "lucide-react": "^0.453.0",
     "next": "^14",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "svix": "^1.37.0"
   },
   "devDependencies": {
     "@types/node": "^20",

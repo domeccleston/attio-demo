@@ -4,6 +4,15 @@ import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
 import { ChevronsUpDown, Menu, ArrowUpRight, BarChart2 } from "lucide-react";
 import { useState } from 'react'
 import Link from 'next/link';
+import { useUser } from "@clerk/nextjs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 
 const tabs = ['Models', 'Logs', 'Environments', 'Integrations', 'Monitoring']
 
@@ -79,8 +88,19 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('Models')
   const [selectedWorkspace, setSelectedWorkspace] = useState('Personal Account')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { user } = useUser();
 
   return (
+    <Dialog>
+    <DialogContent>
+    <DialogHeader>
+      <DialogTitle>Are you absolutely sure?</DialogTitle>
+      <DialogDescription>
+        This action cannot be undone. This will permanently delete your account
+        and remove your data from our servers.
+      </DialogDescription>
+    </DialogHeader>
+    </DialogContent>
     <div className="min-h-screen bg-gray-50">
       <header className="p-4 flex justify-between items-center">
         <div className="flex items-center space-x-4">
@@ -88,18 +108,25 @@ export default function Dashboard() {
           <div className="hidden md:flex items-center space-x-2">
             <div className="relative">
               <button
-                className="flex items-center space-x-1 text-sm font-medium text-gray-700 hover:text-gray-900"
+                className="flex items-center space-x-2 text-sm font-medium text-gray-700 hover:text-gray-900"
                 onClick={() => setIsWorkspaceDropdownOpen(!isWorkspaceDropdownOpen)}
               >
-                <span>{selectedWorkspace}</span>
+                {user && user.imageUrl && (
+                  <img
+                    src={user.imageUrl}
+                    alt="User avatar"
+                    className="w-6 h-6 rounded-full"
+                  />
+                )}
+                <span className="inline-flex items-center">{selectedWorkspace}</span>
                 <ChevronsUpDown className="h-5 w-5" />
               </button>
               {isWorkspaceDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                <div className="absolute top-full left-0 mt-1.5 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
+                  <div role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                     <a
                       href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                      className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
                       role="menuitem"
                       onClick={() => {
                         setSelectedWorkspace('Personal Account')
@@ -107,48 +134,17 @@ export default function Dashboard() {
                       }}
                     >
                       Personal Account
-                    </a>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                    </a>    
+                    <DialogTrigger
+                      className="block px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
                       role="menuitem"
                     >
                       Create Team
-                    </a>
+                    </DialogTrigger>
                   </div>
                 </div>
               )}
             </div>
-            {/* <span className="text-gray-500">/</span> */}
-            {/* <div className="relative">
-              <button
-                className="flex items-center space-x-1 text-sm font-medium text-gray-700 hover:text-gray-900"
-                onClick={() => setIsEnvironmentDropdownOpen(!isEnvironmentDropdownOpen)}
-              >
-                <span>{selectedEnvironment}</span>
-                <ChevronsUpDown className="h-5 w-5" />
-              </button>
-              {isEnvironmentDropdownOpen && (
-                <div className="absolute top-full left-0 mt-1 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-                  <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                    {environments.map((env) => (
-                      <a
-                        key={env}
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                        role="menuitem"
-                        onClick={() => {
-                          setSelectedEnvironment(env)
-                          setIsEnvironmentDropdownOpen(false)
-                        }}
-                      >
-                        {env}
-                      </a>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div> */}
           </div>
         </div>
         <div className="hidden md:flex items-center space-x-4">
@@ -350,5 +346,6 @@ export default function Dashboard() {
         </div>
       </footer>
     </div>
+    </Dialog>
   )
 }
