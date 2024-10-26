@@ -3,7 +3,7 @@ import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   return new Response("Hello, World!");
 }
 
