@@ -25,7 +25,8 @@ export async function GET() {
     created_at,
   } = data;
 
-  const result = await analytics.track({
+  // Create both promises
+  const trackPromise = analytics.track({
     userId: id,
     event: "User Signed Up",
     properties: {
@@ -38,10 +39,7 @@ export async function GET() {
     },
   });
 
-  console.log(result);
-
-  // Create/update the user profile in Segment
-  const result2 = await analytics.identify({
+  const identifyPromise = analytics.identify({
     userId: id,
     traits: {
       firstName: first_name,
@@ -49,11 +47,13 @@ export async function GET() {
       email: email_addresses[0]?.email_address,
       phone: phone_numbers[0]?.phone_number,
       username,
-      // Add any other persistent user traits
+      createdAt: created_at,
     },
   });
 
-  console.log(result2);
+  // Wait for both operations and flush
+  await Promise.all([trackPromise, identifyPromise]);
+  await analytics.closeAndFlush();
 
   return new Response("Success", { status: 200 });
 }
