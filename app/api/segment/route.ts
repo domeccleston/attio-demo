@@ -10,11 +10,25 @@ const data = {
   created_at: "2024-01-01",
 };
 
-const analytics = new Analytics({
-  writeKey: process.env.SEGMENT_WRITE_KEY!,
-  host: "https://events.eu1.segmentapis.com", // Set EU endpoint
-  path: "/v1/", // Specify API version
-});
+const SEGMENT_WRITE_KEY = process.env.SEGMENT_WRITE_KEY!;
+const SEGMENT_API_URL = 'https://api.segment.io/v1';
+
+async function makeSegmentRequest(endpoint: string, payload: any) {
+  const response = await fetch(`${SEGMENT_API_URL}/${endpoint}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${Buffer.from(SEGMENT_WRITE_KEY + ':').toString('base64')}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Segment API error: ${response.status} ${response.statusText}`);
+  }
+
+  return response.json();
+}
 
 export async function GET() {
   const {
@@ -27,35 +41,43 @@ export async function GET() {
     created_at,
   } = data;
 
-  // Create both promises
-  const trackPromise = analytics.track({
-    userId: id,
-    event: "User Signed Up",
-    properties: {
-      firstName: first_name,
-      lastName: last_name,
-      email: email_addresses[0]?.email_address,
-      phone: phone_numbers[0]?.phone_number,
-      username,
-      createdAt: created_at,
-    },
-  });
+  const commonProperties = {
+    firstName: first_name,
+    lastName: last_name,
+    email: email_addresses[0]?.email_address,
+    phone: phone_numbers[0]?.phone_number,
+    username,
+    createdAt: created_at,
+  };
 
-  const identifyPromise = analytics.identify({
-    userId: id,
-    traits: {
-      firstName: first_name,
-      lastName: last_name,
-      email: email_addresses[0]?.email_address,
-      phone: phone_numbers[0]?.phone_number,
-      username,
-      createdAt: created_at,
-    },
-  });
+  try {
+    // Make both requests
+    const [trackResult, identifyResult] = await Promise.all([
+      makeSegmentRequest('track', {
+        userId: id,
+        event: "User Signed Up",
+        properties: commonProperties,
+        timestamp: new Date().toISOString(), // Add timestamp
+      }),
+      makeSegmentRequest('identify', {
+        userId: id,
+        traits: commonProperties,
+        timestamp: new Date().toISOString(), // Add timestamp
+      }),
+    ]);
 
-  // Wait for both operations and flush
-  await Promise.all([trackPromise, identifyPromise]);
-  await analytics.closeAndFlush();
+    console.log('Track result:', trackResult);
+    console.log('Identify result:', identifyResult);
 
-  return new Response("Success", { status: 200 });
+    return new Response(JSON.stringify({ trackResult, identifyResult }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch (error) {
+    console.error('Error making Segment requests:', error);
+    return new Response(JSON.stringify({ error: 'Error processing request' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 }
