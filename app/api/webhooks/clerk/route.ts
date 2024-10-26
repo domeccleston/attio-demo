@@ -99,6 +99,7 @@ export async function POST(req: NextRequest) {
               traits: {
                 firstName: first_name,
                 lastName: last_name,
+                fullName: `${last_name}, ${first_name}`,
                 email: email_addresses[0]?.email_address,
                 phone: phone_numbers[0]?.phone_number,
                 username,
