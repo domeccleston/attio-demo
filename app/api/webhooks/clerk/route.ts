@@ -1,8 +1,15 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Analytics } from "@segment/analytics-node";
+
+export const runtime = "edge";
+
+const analytics = new Analytics({
+  writeKey: process.env.SEGMENT_WRITE_KEY!,
+  flushAt: 1,
+}).on("error", console.error);
 
 export async function GET() {
   return new Response("Hello, World!");
@@ -10,20 +17,13 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const WEBHOOK_SECRET = process.env.CLERK_SIGNING_SECRET;
-  const SEGMENT_WRITE_KEY = process.env.SEGMENT_WRITE_KEY;
-
-  if (!SEGMENT_WRITE_KEY) {
-    return new Response("Missing SEGMENT_WRITE_KEY", { status: 400 });
-  }
 
   if (!WEBHOOK_SECRET) {
-    return new Response("Missing CLERK_SIGNING_SECRET", { status: 400 });
+    return NextResponse.json(
+      { error: "Missing CLERK_SIGNING_SECRET" },
+      { status: 400 }
+    );
   }
-
-  // Initialize Segment
-  const analytics = new Analytics({
-    writeKey: process.env.SEGMENT_WRITE_KEY!,
-  });
 
   // Get the headers
   const headerPayload = headers();
@@ -33,10 +33,8 @@ export async function POST(req: NextRequest) {
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    console.error("Error occured -- no svix headers");
-    return new Response("Error occured -- no svix headers", {
-      status: 400,
-    });
+    console.error("Error occurred -- no svix headers");
+    return NextResponse.json({ error: "No svix headers" }, { status: 400 });
   }
 
   // Get the body
@@ -64,7 +62,6 @@ export async function POST(req: NextRequest) {
         first_name,
         last_name,
         created_at,
-        // Add any other user data you want to track
         phone_numbers,
         username,
         external_accounts,
@@ -72,47 +69,55 @@ export async function POST(req: NextRequest) {
 
       try {
         console.log("Tracking user signup");
-        // Track the signup event
-        await analytics.track({
-          userId: id,
-          event: "User Signed Up",
-          properties: {
-            firstName: first_name,
-            lastName: last_name,
-            email: email_addresses[0]?.email_address,
-            phone: phone_numbers[0]?.phone_number,
-            username,
-            signupMethod: external_accounts?.[0]?.provider || "email",
-            createdAt: created_at,
-          },
+        await new Promise<void>((resolve) => {
+          analytics.track(
+            {
+              userId: id,
+              event: "User Signed Up",
+              properties: {
+                firstName: first_name,
+                lastName: last_name,
+                email: email_addresses[0]?.email_address,
+                phone: phone_numbers[0]?.phone_number,
+                username,
+                signupMethod: external_accounts?.[0]?.provider || "email",
+                createdAt: created_at,
+              },
+            },
+            () => resolve()
+          );
         });
 
         console.log("Tracking user profile");
-        // Create/update the user profile in Segment
-        await analytics.identify({
-          userId: id,
-          traits: {
-            firstName: first_name,
-            lastName: last_name,
-            email: email_addresses[0]?.email_address,
-            phone: phone_numbers[0]?.phone_number,
-            username,
-            // Add any other persistent user traits
-          },
+        await new Promise<void>((resolve) => {
+          analytics.identify(
+            {
+              userId: id,
+              traits: {
+                firstName: first_name,
+                lastName: last_name,
+                email: email_addresses[0]?.email_address,
+                phone: phone_numbers[0]?.phone_number,
+                username,
+              },
+            },
+            () => resolve()
+          );
         });
 
         console.log("Successfully tracked new user profile in Segment");
       } catch (error) {
         console.error("Error tracking user in Segment:", error);
-        return new Response("Error tracking user", { status: 500 });
+        return NextResponse.json(
+          { error: "Error tracking user" },
+          { status: 500 }
+        );
       }
     }
 
-    return new Response("Success", { status: 200 });
+    return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (err) {
     console.error("Error verifying webhook:", err);
-    return new Response("Error occured", {
-      status: 400,
-    });
+    return NextResponse.json({ error: "Error occurred" }, { status: 400 });
   }
 }
