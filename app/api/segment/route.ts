@@ -1,5 +1,5 @@
 import { Analytics } from "@segment/analytics-node";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export const runtime = "edge";
 
@@ -14,7 +14,7 @@ type SegmentEvent = {
   properties: Record<string, string | number | boolean>;
 };
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   console.log("Starting Segment route handler");
 
   try {
