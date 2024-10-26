@@ -1,6 +1,6 @@
 import { Webhook } from "svix";
 import { headers } from "next/headers";
-import { WebhookEvent } from "@clerk/nextjs/server";
+import { WebhookEvent, createClerkClient } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { Analytics } from "@segment/analytics-node";
 
@@ -10,6 +10,10 @@ const analytics = new Analytics({
   writeKey: process.env.SEGMENT_WRITE_KEY!,
   flushAt: 1,
 }).on("error", console.error);
+
+const clerkClient = createClerkClient({
+  secretKey: process.env.CLERK_SECRET_KEY,
+});
 
 export async function POST(req: NextRequest) {
   const WEBHOOK_SECRET = process.env.CLERK_SIGNING_SECRET;
@@ -116,7 +120,21 @@ export async function POST(req: NextRequest) {
       }
     } else if (type === "organization.created") {
       console.log("Organization created");
-      const { id, name, slug, created_at, image_url, members_count } = data;
+      const {
+        id,
+        name,
+        slug,
+        created_at,
+        image_url,
+        members_count,
+        created_by,
+      } = data;
+
+      const user = await clerkClient.users.getUser(created_by);
+      const primaryEmail = user.emailAddresses.find(
+        (email) => email.id === user.primaryEmailAddressId
+      );
+      const domain = primaryEmail?.emailAddress.split("@")[1] || null;
 
       try {
         console.log("Tracking organization creation");
@@ -124,14 +142,14 @@ export async function POST(req: NextRequest) {
           analytics.group(
             {
               groupId: id,
-              userId: id, // Adding userId to satisfy the GroupParams type
-              anonymousId: id, // Adding anonymousId to satisfy the GroupParams type
+              userId: created_by, // Use created_by as userId
               traits: {
                 name,
                 slug,
                 createdAt: new Date(created_at * 1000),
                 avatarUrl: image_url,
                 memberCount: members_count,
+                domain,
               },
             },
             () => resolve()
@@ -143,15 +161,15 @@ export async function POST(req: NextRequest) {
           analytics.track(
             {
               event: "Organization Created",
-              userId: id, // Adding userId to satisfy the TrackParams type
-              anonymousId: id, // Adding anonymousId to satisfy the TrackParams type
+              userId: created_by, // Use created_by as userId
               properties: {
                 organizationId: id,
                 name,
                 slug,
                 createdAt: created_at,
                 avatarUrl: image_url,
-                memberCount: members_count, // Changed from members.length to members_count
+                memberCount: members_count,
+                domain,
               },
             },
             () => resolve()
