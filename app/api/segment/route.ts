@@ -1,41 +1,51 @@
-import { Analytics } from '@segment/analytics-node';
+import { Analytics } from "@segment/analytics-node";
+import { NextRequest, NextResponse } from "next/server";
 
-// Initialize the Segment client
-const analytics = new Analytics({ writeKey: process.env.SEGMENT_WRITE_KEY! });
+export const runtime = "edge";
 
-export async function GET() {
+const analytics = new Analytics({
+  writeKey: process.env.SEGMENT_WRITE_KEY!,
+  flushAt: 1,
+}).on("error", console.error);
+
+type SegmentEvent = {
+  userId: string;
+  event: string;
+  properties: Record<string, string | number | boolean>;
+};
+
+export async function GET(req: NextRequest) {
+  console.log("Starting Segment route handler");
+
   try {
-    // Basic user data
-    const userId = 'user_123';
-    const event = 'User Signed Up';
-    const properties = {
-      name: 'John Doe',
-      email: 'john@example.com'
+    const segmentEvent: SegmentEvent = {
+      userId: "user_123",
+      event: "User Signed Up",
+      properties: {
+        name: "John Doe",
+        email: "john@example.com",
+      },
     };
 
-    // Send a single track event
-    await new Promise((resolve, reject) => {
-      analytics.track({
-        userId: userId,
-        event: event,
-        properties: properties
-      }, (err) => {
-        if (err) reject(err);
-        else resolve(null);
+    console.log("About to send event to Segment");
+    await new Promise<void>((resolve) => {
+      analytics.track(segmentEvent, () => {
+        console.log("Track call completed");
+        resolve();
       });
     });
 
-    console.log('Event sent to Segment');
+    console.log("Event sent to Segment");
 
-    return new Response(JSON.stringify({ success: true, message: 'Event sent to Segment' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    return NextResponse.json(
+      { success: true, message: "Event sent to Segment" },
+      { status: 200 }
+    );
   } catch (error) {
-    console.error('Error sending event to Segment:', error);
-    return new Response(JSON.stringify({ success: false, error: 'Failed to send event to Segment' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
+    console.error("Caught error in route handler:", error);
+    return NextResponse.json(
+      { success: false, error: "Failed to send event to Segment" },
+      { status: 500 }
+    );
   }
 }
