@@ -67,35 +67,40 @@ export async function POST(req: NextRequest) {
         external_accounts,
       } = data;
 
-      // Track the signup event
-      await analytics.track({
-        userId: id,
-        event: "User Signed Up",
-        properties: {
-          firstName: first_name,
-          lastName: last_name,
-          email: email_addresses[0]?.email_address,
-          phone: phone_numbers[0]?.phone_number,
-          username,
-          signupMethod: external_accounts?.[0]?.provider || "email",
-          createdAt: created_at,
-        },
-      });
+      try {
+        // Track the signup event
+        await analytics.track({
+          userId: id,
+          event: "User Signed Up",
+          properties: {
+            firstName: first_name,
+            lastName: last_name,
+            email: email_addresses[0]?.email_address,
+            phone: phone_numbers[0]?.phone_number,
+            username,
+            signupMethod: external_accounts?.[0]?.provider || "email",
+            createdAt: created_at,
+          },
+        });
 
-      // Create/update the user profile in Segment
-      await analytics.identify({
-        userId: id,
-        traits: {
-          firstName: first_name,
-          lastName: last_name,
-          email: email_addresses[0]?.email_address,
-          phone: phone_numbers[0]?.phone_number,
-          username,
-          // Add any other persistent user traits
-        },
-      });
+        // Create/update the user profile in Segment
+        await analytics.identify({
+          userId: id,
+          traits: {
+            firstName: first_name,
+            lastName: last_name,
+            email: email_addresses[0]?.email_address,
+            phone: phone_numbers[0]?.phone_number,
+            username,
+            // Add any other persistent user traits
+          },
+        });
 
-      console.log("Successfully tracked new user signup in Segment");
+        console.log("Successfully tracked new user signup in Segment");
+      } catch (error) {
+        console.error("Error tracking user in Segment:", error);
+        return new Response("Error tracking user", { status: 500 });
+      }
     }
 
     return new Response("Success", { status: 200 });
