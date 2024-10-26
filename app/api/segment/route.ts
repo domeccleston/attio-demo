@@ -12,7 +12,7 @@ const data = {
 
 const analytics = new Analytics({
   writeKey: process.env.SEGMENT_WRITE_KEY!,
-  host: "events.eu1.segmentapis.com", // Set EU endpoint
+  host: "https://events.eu1.segmentapis.com", // Set EU endpoint
   path: "/v1/", // Specify API version
 });
 
