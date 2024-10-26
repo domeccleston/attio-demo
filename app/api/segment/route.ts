@@ -10,11 +10,11 @@ const data = {
   created_at: "2024-01-01",
 };
 
-export async function GET() {
-  const analytics = new Analytics({
-    writeKey: process.env.SEGMENT_WRITE_KEY!,
-  });
+const analytics = new Analytics({
+  writeKey: process.env.SEGMENT_WRITE_KEY!,
+});
 
+export async function GET() {
   const {
     first_name,
     last_name,
