@@ -11,10 +11,6 @@ const analytics = new Analytics({
   flushAt: 1,
 }).on("error", console.error);
 
-export async function GET() {
-  return new Response("Hello, World!");
-}
-
 export async function POST(req: NextRequest) {
   const WEBHOOK_SECRET = process.env.CLERK_SIGNING_SECRET;
 
@@ -115,6 +111,58 @@ export async function POST(req: NextRequest) {
         console.error("Error tracking user in Segment:", error);
         return NextResponse.json(
           { error: "Error tracking user" },
+          { status: 500 }
+        );
+      }
+    } else if (type === "organization.created") {
+      console.log("Organization created");
+      const { id, name, slug, created_at, image_url, members_count } = data;
+
+      try {
+        console.log("Tracking organization creation");
+        await new Promise<void>((resolve) => {
+          analytics.group(
+            {
+              groupId: id,
+              userId: id, // Adding userId to satisfy the GroupParams type
+              anonymousId: id, // Adding anonymousId to satisfy the GroupParams type
+              traits: {
+                name,
+                slug,
+                createdAt: new Date(created_at * 1000),
+                avatarUrl: image_url,
+                memberCount: members_count,
+              },
+            },
+            () => resolve()
+          );
+        });
+
+        console.log("Tracking organization creation event");
+        await new Promise<void>((resolve) => {
+          analytics.track(
+            {
+              event: "Organization Created",
+              userId: id, // Adding userId to satisfy the TrackParams type
+              anonymousId: id, // Adding anonymousId to satisfy the TrackParams type
+              properties: {
+                organizationId: id,
+                name,
+                slug,
+                createdAt: created_at,
+                avatarUrl: image_url,
+                memberCount: members_count, // Changed from members.length to members_count
+              },
+            },
+            () => resolve()
+          );
+        });
+
+        console.log("Successfully tracked new organization in Segment");
+      } catch (error) {
+        console.error("Error tracking organization in Segment:", error);
+        return NextResponse.json(
+          { error: "Error tracking organization" },
           { status: 500 }
         );
       }
