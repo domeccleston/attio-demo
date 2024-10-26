@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -66,9 +65,8 @@
   body {
     @apply bg-background text-foreground;
     background-color: #f8f8f8; /* Light base color */
-    background-image: 
-      linear-gradient(to right, #f4f4f4 1px, transparent 1px),
-      linear-gradient(to bottom, #f4f4f4 1px, transparent 1px);
+    background-image: linear-gradient(to right, #f2f2f2 1px, transparent 1px),
+      linear-gradient(to bottom, #f2f2f2 1px, transparent 1px);
     background-size: 20px 20px; /* Size of each grid cell */
   }
 }
