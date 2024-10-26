@@ -3,6 +3,10 @@ import { headers } from "next/headers";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 
+export async function GET(req: NextRequest) {
+  return new Response("Hello, World!");
+}
+
 export async function POST(req: NextRequest) {
   const WEBHOOK_SECRET = process.env.CLERK_SIGNING_SECRET;
 
