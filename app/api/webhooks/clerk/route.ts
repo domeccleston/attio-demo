@@ -65,6 +65,7 @@ export async function POST(req: NextRequest) {
         phone_numbers,
         username,
         external_accounts,
+        image_url,
       } = data;
 
       try {
@@ -82,6 +83,7 @@ export async function POST(req: NextRequest) {
                 username,
                 signupMethod: external_accounts?.[0]?.provider || "email",
                 createdAt: created_at,
+                avatarUrl: image_url,
               },
             },
             () => resolve()
@@ -99,6 +101,7 @@ export async function POST(req: NextRequest) {
                 email: email_addresses[0]?.email_address,
                 phone: phone_numbers[0]?.phone_number,
                 username,
+                avatarUrl: image_url,
               },
             },
             () => resolve()
