@@ -33,6 +33,7 @@ export async function POST(req: NextRequest) {
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
+    console.error("Error occured -- no svix headers");
     return new Response("Error occured -- no svix headers", {
       status: 400,
     });
@@ -46,6 +47,7 @@ export async function POST(req: NextRequest) {
   const webhook = new Webhook(WEBHOOK_SECRET);
 
   try {
+    console.log("Verifying webhook");
     const event = webhook.verify(body, {
       "svix-id": svix_id,
       "svix-timestamp": svix_timestamp,
@@ -55,6 +57,7 @@ export async function POST(req: NextRequest) {
     const { type, data } = event;
 
     if (type === "user.created") {
+      console.log("User created");
       const {
         id,
         email_addresses,
@@ -68,6 +71,7 @@ export async function POST(req: NextRequest) {
       } = data;
 
       try {
+        console.log("Tracking user signup");
         // Track the signup event
         await analytics.track({
           userId: id,
@@ -83,6 +87,7 @@ export async function POST(req: NextRequest) {
           },
         });
 
+        console.log("Tracking user profile");
         // Create/update the user profile in Segment
         await analytics.identify({
           userId: id,
@@ -96,7 +101,7 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        console.log("Successfully tracked new user signup in Segment");
+        console.log("Successfully tracked new user profile in Segment");
       } catch (error) {
         console.error("Error tracking user in Segment:", error);
         return new Response("Error tracking user", { status: 500 });
