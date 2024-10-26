@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
+import Intercom from "@intercom/messenger-js-sdk";
 
 const tabs = ["Models", "Logs", "Environments", "Integrations", "Monitoring"];
 
@@ -153,6 +154,14 @@ export default function Dashboard() {
     }
     setDialogOpen(false);
   };
+
+  Intercom({
+    app_id: "kr3tjdn6",
+    user_id: user?.id ?? undefined,
+    name: user?.firstName ?? undefined,
+    email: user?.primaryEmailAddress?.emailAddress ?? undefined,
+    created_at: user?.createdAt ? Math.floor(user.createdAt.getTime() / 1000) : undefined,
+  });
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
