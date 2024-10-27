@@ -10,8 +10,6 @@ export async function createTeam(formData: FormData) {
   const newOrgSlug = formData.get("teamSlug") as string;
   const user = await currentUser();
 
-  console.log({ newOrgName, newOrgSlug });
-
   if (!user) {
     throw new Error("User not found");
   }
@@ -44,7 +42,7 @@ export async function createTeam(formData: FormData) {
     throw new Error("An organization with this slug already exists");
   }
 
-  const newOrg =await clerkClient.organizations.createOrganization({
+  const newOrg = await clerkClient.organizations.createOrganization({
     name: newOrgName,
     slug: newOrgSlug,
     createdBy: user.id,
