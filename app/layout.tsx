@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
-import "./styles/globals.css";
-
 import { ClerkProvider } from "@clerk/nextjs";
+
+import "./styles/globals.css";
 
 export const metadata: Metadata = {
   title: "ModelFlow",
@@ -16,7 +16,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body>{children}</body>
+        <body className="antialiased">{children}</body>
       </html>
     </ClerkProvider>
   );

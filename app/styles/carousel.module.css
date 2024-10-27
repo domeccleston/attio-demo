@@ -18,12 +18,20 @@
 
 .carouselContainer::before {
   left: 0;
-  background: linear-gradient(to right, rgba(248, 248, 248, 1), rgba(248, 248, 248, 0));
+  background: linear-gradient(
+    to right,
+    rgba(248, 248, 248, 1),
+    rgba(248, 248, 248, 0)
+  );
 }
 
 .carouselContainer::after {
   right: 0;
-  background: linear-gradient(to left, rgba(248, 248, 248, 1), rgba(248, 248, 248, 0));
+  background: linear-gradient(
+    to left,
+    rgba(248, 248, 248, 1),
+    rgba(248, 248, 248, 0)
+  );
 }
 
 .carouselTrack {
