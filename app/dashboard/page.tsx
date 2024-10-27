@@ -1,14 +1,8 @@
 "use client";
 
-import {
-  SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-  useOrganizationList,
-} from "@clerk/nextjs";
+import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { ChevronsUpDown, Menu, ArrowUpRight, BarChart2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import {
@@ -21,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import Intercom from "@intercom/messenger-js-sdk";
+import { createTeam } from "@/app/actions/create-team";
 
 const tabs = ["Models", "Logs", "Environments", "Integrations", "Monitoring"];
 
@@ -128,7 +123,6 @@ function CircularGauge({ value, size = 40 }: { value: number; size?: number }) {
 }
 
 export default function Dashboard() {
-  const { createOrganization } = useOrganizationList();
   const [isWorkspaceDropdownOpen, setIsWorkspaceDropdownOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("Models");
   const [selectedWorkspace, setSelectedWorkspace] =
@@ -139,20 +133,20 @@ export default function Dashboard() {
   const [teamSlug, setTeamSlug] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleCreateTeam = async (e: React.FormEvent) => {
     e.preventDefault();
-    // createOrganization is possibly undefined
-    if (createOrganization) {
-      const result = await createOrganization({
-        name: teamName,
-        slug: teamSlug,
-      });
-      if (result) {
-        router.push(`/dashboard/teams/${result.id}`);
+    if (formRef.current) {
+      const formData = new FormData(formRef.current);
+      try {
+        const id = await createTeam(formData);
+        setDialogOpen(false);
+        router.push(`/dashboard/teams/${id}`);
+      } catch (error) {
+        console.error("Error creating team:", error);
       }
     }
-    setDialogOpen(false);
   };
 
   Intercom({
@@ -160,7 +154,9 @@ export default function Dashboard() {
     user_id: user?.id ?? undefined,
     name: user?.firstName ?? undefined,
     email: user?.primaryEmailAddress?.emailAddress ?? undefined,
-    created_at: user?.createdAt ? Math.floor(user.createdAt.getTime() / 1000) : undefined,
+    created_at: user?.createdAt
+      ? Math.floor(user.createdAt.getTime() / 1000)
+      : undefined,
   });
 
   return (
@@ -172,7 +168,7 @@ export default function Dashboard() {
             Create a new team to collaborate with others.
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleCreateTeam} className="space-y-4">
+        <form ref={formRef} onSubmit={handleCreateTeam} className="space-y-4">
           <div>
             <label
               htmlFor="teamName"
@@ -182,6 +178,7 @@ export default function Dashboard() {
             </label>
             <input
               type="text"
+              name="teamName"
               id="teamName"
               value={teamName}
               onChange={(e) => setTeamName(e.target.value)}
@@ -198,6 +195,7 @@ export default function Dashboard() {
             </label>
             <input
               type="text"
+              name="teamSlug"
               id="teamSlug"
               value={teamSlug}
               onChange={(e) => setTeamSlug(e.target.value)}
@@ -206,14 +204,13 @@ export default function Dashboard() {
             />
           </div>
           <div className="flex justify-end space-x-2">
-            <DialogTrigger asChild>
-              <button
-                type="button"
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-              >
-                Cancel
-              </button>
-            </DialogTrigger>
+            <button
+              type="button"
+              onClick={() => setDialogOpen(false)}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Cancel
+            </button>
             <button
               type="submit"
               className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
