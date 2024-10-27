@@ -1,9 +1,11 @@
-import { Webhook } from "svix";
 import { headers } from "next/headers";
-import { WebhookEvent, createClerkClient } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
-import { Analytics } from "@segment/analytics-node";
 
+import { WebhookEvent, createClerkClient } from "@clerk/nextjs/server";
+import { Analytics } from "@segment/analytics-node";
+import { Webhook } from "svix";
+
+// Segment Node SDK doesn't play well with AWS Lambda, so use edge runtime
 export const runtime = "edge";
 
 const analytics = new Analytics({
@@ -25,23 +27,19 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Get the headers
   const headerPayload = headers();
   const svix_id = headerPayload.get("svix-id");
   const svix_timestamp = headerPayload.get("svix-timestamp");
   const svix_signature = headerPayload.get("svix-signature");
 
-  // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
     console.error("Error occurred -- no svix headers");
     return NextResponse.json({ error: "No svix headers" }, { status: 400 });
   }
 
-  // Get the body
   const payload = await req.json();
   const body = JSON.stringify(payload);
 
-  // Create a new SVIX instance with your secret
   const webhook = new Webhook(WEBHOOK_SECRET);
 
   try {

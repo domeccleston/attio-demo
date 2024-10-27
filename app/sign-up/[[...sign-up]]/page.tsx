@@ -1,6 +1,7 @@
-import { SignUp } from "@clerk/nextjs";
 import Link from "next/link";
 import { cookies } from "next/headers";
+
+import { SignUp } from "@clerk/nextjs";
 
 export default function CustomSignUp() {
   cookies();

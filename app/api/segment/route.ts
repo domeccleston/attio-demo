@@ -1,5 +1,6 @@
-import { Analytics } from "@segment/analytics-node";
 import { NextResponse } from "next/server";
+
+import { Analytics } from "@segment/analytics-node";
 
 export const runtime = "edge";
 

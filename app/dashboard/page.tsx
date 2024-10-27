@@ -1,10 +1,20 @@
 "use client";
 
-import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
-import { ChevronsUpDown, Menu, ArrowUpRight, BarChart2 } from "lucide-react";
-import { useState, useRef } from "react";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState, useRef } from "react";
+
+import {
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+  useUser,
+} from "@clerk/nextjs";
+import Intercom from "@intercom/messenger-js-sdk";
+import { ChevronsUpDown, Menu, ArrowUpRight, BarChart2 } from "lucide-react";
+
 import {
   Dialog,
   DialogContent,
@@ -13,13 +23,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { useRouter } from "next/navigation";
-import Intercom from "@intercom/messenger-js-sdk";
+import { CircularGauge } from "@/components/ui/gauge";
 import { createTeam } from "@/app/actions/create-team";
 
 const tabs = ["Models", "Logs", "Environments", "Integrations", "Monitoring"];
 
-// Add this new interface for the model type
 interface Model {
   id: string;
   name: string;
@@ -31,10 +39,9 @@ interface Model {
     requests: number;
     accuracy: number;
   };
-  trend: number[]; // Array of numbers representing the trend
+  trend: number[];
 }
 
-// Add this sample data
 const sampleModels: Model[] = [
   {
     id: "1",
@@ -77,50 +84,6 @@ const sampleModels: Model[] = [
     trend: [40, 45, 50, 55, 60, 75, 80],
   },
 ];
-
-// Add this new function to generate the circular gauge
-function CircularGauge({ value, size = 40 }: { value: number; size?: number }) {
-  const strokeWidth = size * 0.1;
-  const radius = (size - strokeWidth) / 2;
-  const circumference = radius * 2 * Math.PI;
-  const progress = (value / 100) * circumference;
-  const color = `hsl(${value * 1.2}, 70%, 50%)`; // This will give a color range from red (0) to green (100)
-
-  return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={radius}
-        fill="none"
-        stroke="#e6e6e6"
-        strokeWidth={strokeWidth}
-      />
-      <circle
-        cx={size / 2}
-        cy={size / 2}
-        r={radius}
-        fill="none"
-        stroke={color}
-        strokeWidth={strokeWidth}
-        strokeDasharray={circumference}
-        strokeDashoffset={circumference - progress}
-        transform={`rotate(-90 ${size / 2} ${size / 2})`}
-      />
-      <text
-        x="50%"
-        y="50%"
-        dominantBaseline="middle"
-        textAnchor="middle"
-        fontSize={size * 0.3}
-        fontWeight="bold"
-        fill={color}
-      >
-        {value}
-      </text>
-    </svg>
-  );
-}
 
 export default function Dashboard() {
   const [isWorkspaceDropdownOpen, setIsWorkspaceDropdownOpen] = useState(false);
@@ -235,10 +198,15 @@ export default function Dashboard() {
                   }
                 >
                   {user && user.imageUrl && (
-                    <img
+                    <Image
                       src={user.imageUrl}
                       alt="User avatar"
                       className="w-6 h-6 rounded-full"
+                      width={24}
+                      height={24}
+                      loading="eager"
+                      placeholder="blur"
+                      blurDataURL={user.imageUrl}
                     />
                   )}
                   <span className="inline-flex items-center">
