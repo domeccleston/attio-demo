@@ -1,4 +1,5 @@
 "use server";
+import { slugify } from "@/lib/utils";
 import { createClerkClient, currentUser } from "@clerk/nextjs/server";
 
 const clerkClient = createClerkClient({
@@ -7,25 +8,11 @@ const clerkClient = createClerkClient({
 
 export async function createTeam(formData: FormData) {
   const newOrgName = formData.get("teamName") as string;
-  const newOrgSlug = formData.get("teamSlug") as string;
+  const newOrgSlug = slugify(newOrgName);
   const user = await currentUser();
 
   if (!user) {
     throw new Error("User not found");
-  }
-
-  const existingOrgsByName =
-    await clerkClient.organizations.getOrganizationList({
-      query: newOrgName,
-    });
-
-  if (
-    existingOrgsByName.data.some(
-      (org: { name: string }) =>
-        org.name.toLowerCase() === newOrgName.toLowerCase()
-    )
-  ) {
-    throw new Error("An organization with this name already exists");
   }
 
   const existingOrgsBySlug =
