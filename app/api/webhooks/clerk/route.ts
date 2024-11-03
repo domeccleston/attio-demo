@@ -17,6 +17,17 @@ const clerkClient = createClerkClient({
   secretKey: process.env.CLERK_SECRET_KEY,
 });
 
+const PERSONAL_EMAIL_DOMAINS = new Set([
+  'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 
+  'aol.com', 'icloud.com', 'proton.me', 'protonmail.com'
+]);
+
+const extractCompanyDomain = (email?: string): string | null => {
+  if (!email) return null;
+  const domain = email.split('@')[1];
+  return domain && !PERSONAL_EMAIL_DOMAINS.has(domain) ? domain : null;
+};
+
 export async function POST(req: NextRequest) {
   const WEBHOOK_SECRET = process.env.CLERK_SIGNING_SECRET;
 
@@ -102,6 +113,7 @@ export async function POST(req: NextRequest) {
                 phone: phone_numbers[0]?.phone_number,
                 username,
                 avatarUrl: image_url,
+                domain: extractCompanyDomain(email_addresses[0]?.email_address),
               },
             },
             () => resolve()
@@ -223,7 +235,6 @@ export async function POST(req: NextRequest) {
             {
               userId: user_id,
               traits: {
-                // Include all original user traits
                 firstName: first_name,
                 lastName: last_name,
                 fullName: `${last_name}, ${first_name}`,
@@ -231,7 +242,7 @@ export async function POST(req: NextRequest) {
                 phone: phoneNumbers[0]?.phoneNumber,
                 username,
                 avatarUrl: image_url,
-                // Add login-specific traits
+                domain: extractCompanyDomain(emailAddresses[0]?.emailAddress),
                 lastLoginAt: new Date(created_at),
               },
             },
