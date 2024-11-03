@@ -188,6 +188,17 @@ export async function POST(req: NextRequest) {
         data;
 
       try {
+        // Fetch user details to maintain consistent identify payload
+        const user = await clerkClient.users.getUser(user_id);
+        const {
+          firstName: first_name,
+          lastName: last_name,
+          imageUrl: image_url,
+          username,
+          emailAddresses,
+          phoneNumbers,
+        } = user;
+
         console.log("Tracking session creation");
         await new Promise<void>((resolve) => {
           analytics.track(
@@ -212,6 +223,15 @@ export async function POST(req: NextRequest) {
             {
               userId: user_id,
               traits: {
+                // Include all original user traits
+                firstName: first_name,
+                lastName: last_name,
+                fullName: `${last_name}, ${first_name}`,
+                email: emailAddresses[0]?.emailAddress,
+                phone: phoneNumbers[0]?.phoneNumber,
+                username,
+                avatarUrl: image_url,
+                // Add login-specific traits
                 lastLoginAt: new Date(created_at),
               },
             },
