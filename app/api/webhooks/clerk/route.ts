@@ -18,13 +18,19 @@ const clerkClient = createClerkClient({
 });
 
 const PERSONAL_EMAIL_DOMAINS = new Set([
-  'gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 
-  'aol.com', 'icloud.com', 'proton.me', 'protonmail.com'
+  "gmail.com",
+  "yahoo.com",
+  "hotmail.com",
+  "outlook.com",
+  "aol.com",
+  "icloud.com",
+  "proton.me",
+  "protonmail.com",
 ]);
 
 const extractCompanyDomain = (email?: string): string | null => {
   if (!email) return null;
-  const domain = email.split('@')[1];
+  const domain = email.split("@")[1];
   return domain && !PERSONAL_EMAIL_DOMAINS.has(domain) ? domain : null;
 };
 
