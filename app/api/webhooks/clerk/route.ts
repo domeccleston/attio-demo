@@ -182,6 +182,51 @@ export async function POST(req: NextRequest) {
           { status: 500 }
         );
       }
+    } else if (type === "session.created") {
+      console.log("Session created");
+      const { id, user_id, created_at, status, client_id, last_active_at } =
+        data;
+
+      try {
+        console.log("Tracking session creation");
+        await new Promise<void>((resolve) => {
+          analytics.track(
+            {
+              userId: user_id,
+              event: "Session Started",
+              properties: {
+                sessionId: id,
+                clientId: client_id,
+                createdAt: new Date(created_at),
+                status,
+                lastActiveAt: new Date(last_active_at),
+              },
+            },
+            () => resolve()
+          );
+        });
+
+        console.log("Updating user's last login time");
+        await new Promise<void>((resolve) => {
+          analytics.identify(
+            {
+              userId: user_id,
+              traits: {
+                lastLoginAt: new Date(created_at),
+              },
+            },
+            () => resolve()
+          );
+        });
+
+        console.log("Successfully tracked new session in Segment");
+      } catch (error) {
+        console.error("Error tracking session in Segment:", error);
+        return NextResponse.json(
+          { error: "Error tracking session" },
+          { status: 500 }
+        );
+      }
     }
 
     return NextResponse.json({ message: "Success" }, { status: 200 });
