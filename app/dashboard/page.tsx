@@ -3,12 +3,12 @@
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 
-import { useUser } from "@clerk/nextjs";
 import Intercom from "@intercom/messenger-js-sdk";
 import { ArrowUpRight, BarChart2 } from "lucide-react";
 import { useStripe } from "@stripe/react-stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import { useOrganizationList, useUser } from "@clerk/nextjs";
 
 import {
   Dialog,
@@ -31,41 +31,63 @@ const stripePromise = loadStripe(
 
 export default function Dashboard() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { user } = useUser();
   const [teamName, setTeamName] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const router = useRouter();
-  const formRef = useRef<HTMLFormElement>(null);
   const [formStage, setFormStage] = useState<"team" | "billing">("team");
   const [clientSecret, setClientSecret] = useState<string>();
+  const [nameError, setNameError] = useState<string>();
+  const [isLoading, setIsLoading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setWorkspaces] = useState<any[]>([]);
+
+  const router = useRouter();
   const stripe = useStripe();
+  const formRef = useRef<HTMLFormElement>(null);
+  const { userMemberships, isLoaded } = useOrganizationList();
+
+  const { user } = useUser();
 
   const handleCreateTeam = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formRef.current) {
-      const formData = new FormData(formRef.current);
-      // Store team name in localStorage before redirect
-      localStorage.setItem(
-        "pendingTeamName",
-        formData.get("teamName") as string
-      );
-      try {
-        const response = await fetch("/api/create-subscription", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            teamName: formData.get("teamName"),
-          }),
-        });
+    if (!formRef.current) return;
 
-        const { clientSecret } = await response.json();
-        setClientSecret(clientSecret);
-        setFormStage("billing");
-      } catch (error) {
-        console.error("Error setting up subscription:", error);
+    setIsLoading(true);
+    const formData = new FormData(formRef.current);
+
+    try {
+      const response = await fetch("/api/create-subscription", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          teamName: formData.get("teamName"),
+        }),
+      });
+
+      const data = (await response.json()) as
+        | { clientSecret: string }
+        | { error: string };
+
+      if (!response.ok) {
+        setNameError(
+          "error" in data ? data.error : "An unexpected error occurred"
+        );
+        return;
       }
+
+      if ("clientSecret" in data) {
+        setNameError(undefined);
+        localStorage.setItem(
+          "pendingTeamName",
+          formData.get("teamName") as string
+        );
+        setClientSecret(data.clientSecret);
+        setFormStage("billing");
+      }
+    } catch (error) {
+      console.error("Error setting up subscription:", error);
+      setNameError("An unexpected error occurred");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -97,7 +119,6 @@ export default function Dashboard() {
     if (clientSecret && sessionId) {
       stripe.retrieveSetupIntent(clientSecret).then(({ setupIntent }) => {
         if (setupIntent?.status === "succeeded") {
-          // Use the session_id which contains our stored team name
           const formData = new FormData();
           formData.append("teamName", sessionId);
 
@@ -106,13 +127,34 @@ export default function Dashboard() {
               setDialogOpen(false);
               router.push(`/dashboard/teams/${teamId}`);
             })
-            .catch((error) => {
+            .catch((error: Error) => {
               console.error("Error creating team:", error);
             });
         }
       });
     }
   }, [stripe, router]);
+
+  useEffect(() => {
+    if (!clientSecret) return;
+  }, [clientSecret]);
+
+  useEffect(() => {
+    const fetchWorkspaces = async () => {
+      try {
+        const response = await fetch("/api/workspaces");
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        setWorkspaces(data);
+      } catch (error) {
+        console.error("Error fetching workspaces:", error);
+      }
+    };
+
+    fetchWorkspaces();
+  }, []);
 
   Intercom({
     app_id: "kr3tjdn6",
@@ -142,53 +184,118 @@ export default function Dashboard() {
         </DialogHeader>
 
         {formStage === "team" ? (
-          <form ref={formRef} onSubmit={handleCreateTeam} className="mt-2">
-            <div className="space-y-6">
-              <div className="space-y-1">
-                <label
-                  htmlFor="teamName"
-                  className="text-sm text-gray-500 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  Team Name
-                </label>
-                <input
-                  type="text"
-                  name="teamName"
-                  id="teamName"
-                  value={teamName}
-                  onChange={(e) => setTeamName(e.target.value)}
-                  className="flex h-11 w-full rounded-md border border-input bg-gray-50/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  placeholder="Enter team name"
-                  required
-                />
-              </div>
+          <div className="mt-2">
+            <div className="space-y-4 mb-6">
+              {isLoaded &&
+                userMemberships?.data &&
+                userMemberships.data.map((org) => (
+                  <div
+                    key={org.organization.id}
+                    onClick={() =>
+                      router.push(`/dashboard/teams/${org.organization.id}`)
+                    }
+                    className="p-4 border rounded-lg hover:bg-gray-50 cursor-pointer flex justify-between items-center"
+                  >
+                    <div>
+                      <h3 className="font-medium">{org.organization.name}</h3>
+                      <p className="text-sm text-gray-500">
+                        {org.organization.membersCount} members
+                      </p>
+                    </div>
+                    <ArrowUpRight className="h-5 w-5 text-gray-400" />
+                  </div>
+                ))}
             </div>
 
-            <div className="flex justify-between sm:space-x-2 mt-10">
-              <button
-                type="button"
-                onClick={() => setDialogOpen(false)}
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 px-5 py-2"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-5 py-2"
-              >
-                Create Team
-              </button>
-            </div>
-          </form>
-        ) : clientSecret ? (
-          <Elements stripe={stripePromise} options={{ clientSecret }}>
-            <SubscriptionForm
-              onSuccess={handleSubscriptionSuccess}
-              onBack={() => setFormStage("team")}
-            />
-          </Elements>
+            <form ref={formRef} onSubmit={handleCreateTeam}>
+              <div className="space-y-6">
+                <div className="min-h-[85px]">
+                  <div className="space-y-1">
+                    <label
+                      htmlFor="teamName"
+                      className="text-sm text-gray-500 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Team Name
+                    </label>
+                    <input
+                      type="text"
+                      name="teamName"
+                      id="teamName"
+                      value={teamName}
+                      onChange={(e) => {
+                        setTeamName(e.target.value);
+                        setNameError(undefined);
+                      }}
+                      className={`flex h-11 w-full rounded-md border ${
+                        nameError ? "border-red-500" : "border-input"
+                      } bg-gray-50/50 px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50`}
+                      placeholder="Enter team name"
+                      required
+                    />
+                    <div className="h-5">
+                      {nameError && (
+                        <p className="text-sm text-red-500">{nameError}</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-between sm:space-x-2 mt-10">
+                <button
+                  type="button"
+                  onClick={() => setDialogOpen(false)}
+                  className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-11 px-5 py-2"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-11 px-5 py-2 w-[140px]"
+                >
+                  {isLoading ? (
+                    <>
+                      <svg
+                        className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        />
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        />
+                      </svg>
+                      Creating...
+                    </>
+                  ) : (
+                    "Create Team"
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
         ) : (
-          <div>Loading...</div>
+          <div className="min-h-[400px] flex flex-col">
+            <div className="flex-grow">
+              <Elements stripe={stripePromise} options={{ clientSecret }}>
+                <SubscriptionForm
+                  onSuccess={handleSubscriptionSuccess}
+                  onBack={() => setFormStage("team")}
+                />
+              </Elements>
+            </div>
+          </div>
         )}
       </DialogContent>
       <div className="min-h-screen bg-gray-50">
