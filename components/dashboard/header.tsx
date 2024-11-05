@@ -77,10 +77,6 @@ export function Header({
     clerkUser,
   ]);
 
-  // Add debug log to check user data
-  console.log("User:", user);
-  console.log("Current Workspace:", currentWorkspace);
-
   return (
     <header className="p-4 flex justify-between items-center">
       <div className="flex items-center space-x-4">
