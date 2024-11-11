@@ -28,7 +28,7 @@ export function Hero() {
           Get started
         </Link>
         <Link
-          href="/contact"
+          href="/pricing"
           className="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
         >
           Talk to sales

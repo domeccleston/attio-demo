@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 import { Check } from "lucide-react";
 
@@ -117,12 +118,22 @@ export default function PricingPage() {
                 </ul>
               </CardContent>
               <CardFooter className="bg-gray-50 mt-auto">
-                <Button
-                  className="w-full"
-                  variant={index === 1 ? "default" : "outline"}
+                <Link
+                  href={
+                    plan.name === "Enterprise"
+                      ? "https://forms.fillout.com/t/cbbG8Mg1Dyus?lead_source=fillout"
+                      : "/dashboard"
+                  }
                 >
-                  {plan.name === "Enterprise" ? "Contact Sales" : "Get Started"}
-                </Button>
+                  <Button
+                    className="w-full"
+                    variant={index === 1 ? "default" : "outline"}
+                  >
+                    {plan.name === "Enterprise"
+                      ? "Contact Sales"
+                      : "Get Started"}
+                  </Button>
+                </Link>
               </CardFooter>
             </Card>
           ))}
