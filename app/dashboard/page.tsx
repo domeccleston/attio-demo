@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
 
-import Intercom from "@intercom/messenger-js-sdk";
 import { ArrowUpRight, BarChart2 } from "lucide-react";
 import { useStripe } from "@stripe/react-stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
@@ -154,16 +153,6 @@ export default function Dashboard() {
 
     fetchWorkspaces();
   }, []);
-
-  Intercom({
-    app_id: "kr3tjdn6",
-    user_id: user?.id ?? undefined,
-    name: user?.firstName ?? undefined,
-    email: user?.primaryEmailAddress?.emailAddress ?? undefined,
-    created_at: user?.createdAt
-      ? Math.floor(user.createdAt.getTime() / 1000)
-      : undefined,
-  });
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>

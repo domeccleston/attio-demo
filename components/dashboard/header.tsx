@@ -31,7 +31,11 @@ export function Header({
     image: string | null;
   }>({ name: "Loading...", image: null });
 
-  const { userMemberships, isLoaded: orgsLoaded } = useOrganizationList({
+  const {
+    userMemberships,
+    isLoaded: orgsLoaded,
+    setActive,
+  } = useOrganizationList({
     userMemberships: { infinite: true },
   });
   const { user: clerkUser, isLoaded: userLoaded } = useUser();
@@ -139,7 +143,10 @@ export function Header({
                           ) && "bg-gray-100"
                         )}
                         role="menuitem"
-                        onClick={() => setIsWorkspaceDropdownOpen(false)}
+                        onClick={() => {
+                          setActive({ organization: membership.organization });
+                          setIsWorkspaceDropdownOpen(false);
+                        }}
                       >
                         {membership.organization.name}
                       </Link>
