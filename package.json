@@ -21,6 +21,8 @@
     "class-variance-authority": "^0.7.0",
     "lucide-react": "^0.453.0",
     "next": "^14",
+    "posthog-js": "^1.215.4",
+    "posthog-node": "^4.4.1",
     "react": "^18",
     "react-dom": "^18",
     "stripe": "^17.2.1",

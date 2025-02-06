@@ -18,7 +18,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CircularGauge } from "@/components/ui/gauge";
-import { Footer } from "@/components/marketing/footer";
 import { createTeam } from "@/app/actions/create-team";
 import { sampleModels } from "@/data/models";
 import { Header } from "@/components/dashboard/header";
@@ -381,7 +380,6 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
-      <Footer />
     </Dialog>
   );
 }

@@ -7,7 +7,6 @@ import { Dialog } from "@/components/ui/dialog";
 
 import { Header } from "@/components/dashboard/header";
 import { Tabs } from "@/components/dashboard/tabs";
-import { Footer } from "@/components/marketing/footer";
 
 export default function TeamPage({}: { params: { teamId: string } }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -53,7 +52,6 @@ export default function TeamPage({}: { params: { teamId: string } }) {
             </div>
           </div>
         </div>
-        <Footer />
       </div>
     </Dialog>
   );
