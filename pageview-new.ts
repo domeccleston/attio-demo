@@ -58,11 +58,11 @@ export function PostHogPageView(): null {
         username: user.username,
         // Add UTM params if present
         ...(utmParams && {
-          utmSource: utmParams.utm_source,
-          utmMedium: utmParams.utm_medium,
-          utmCampaign: utmParams.utm_campaign,
-          utmTerm: utmParams.utm_term,
-          utmContent: utmParams.utm_content,
+          initial_utm_source: utmParams.utm_source,
+          initial_utm_medium: utmParams.utm_medium,
+          initial_utm_campaign: utmParams.utm_campaign,
+          initial_utm_term: utmParams.utm_term,
+          initial_utm_content: utmParams.utm_content,
         }),
       });
     }
@@ -75,13 +75,15 @@ export function PostHogPageView(): null {
 
       posthog.group("organization", organization.id, {
         name: organization.name,
+        created_at: organization.createdAt,
+        membership_limit: organization.membersCount,
         // Add UTM params if present
         ...(utmParams && {
-          utmSource: utmParams.utm_source,
-          utmMedium: utmParams.utm_medium,
-          utmCampaign: utmParams.utm_campaign,
-          utmTerm: utmParams.utm_term,
-          utmContent: utmParams.utm_content,
+          initial_utm_source: utmParams.utm_source,
+          initial_utm_medium: utmParams.utm_medium,
+          initial_utm_campaign: utmParams.utm_campaign,
+          initial_utm_term: utmParams.utm_term,
+          initial_utm_content: utmParams.utm_content,
         }),
       });
     }
