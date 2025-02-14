@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { Check } from "lucide-react";
+import { usePostHog } from "posthog-js/react";
+import { FilloutStandardEmbed } from "@fillout/react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -19,10 +21,25 @@ import { plans } from "@/data/plans";
 import { Footer } from "@/components/marketing/footer";
 import { Navigation } from "@/components/marketing/navigation";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 export default function PricingPage() {
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annual">(
     "monthly"
   );
+  const [showEnterpriseForm, setShowEnterpriseForm] = useState(false);
+
+  const posthog = usePostHog();
+
+  useEffect(() => {
+    console.log("posthog", posthog);
+  }, [posthog]);
 
   return (
     <div className="min-h-screen">
@@ -118,22 +135,34 @@ export default function PricingPage() {
                 </ul>
               </CardContent>
               <CardFooter className="bg-gray-50 mt-auto">
-                <Link
-                  href={
-                    plan.name === "Enterprise"
-                      ? "https://forms.fillout.com/t/cbbG8Mg1Dyus?lead_source=fillout"
-                      : "/dashboard"
-                  }
-                >
-                  <Button
-                    className="w-full"
-                    variant={index === 1 ? "default" : "outline"}
-                  >
-                    {plan.name === "Enterprise"
-                      ? "Contact Sales"
-                      : "Get Started"}
-                  </Button>
-                </Link>
+                {plan.name === "Enterprise" ? (
+                  <>
+                    <Button
+                      className="w-full"
+                      variant={index === 1 ? "default" : "outline"}
+                      onClick={() => setShowEnterpriseForm(true)}
+                    >
+                      Contact Sales
+                    </Button>
+                    <Dialog
+                      open={showEnterpriseForm}
+                      onOpenChange={setShowEnterpriseForm}
+                    >
+                      <DialogContent className="sm:max-w-[800px] min-h-[700px]">
+                        <FilloutStandardEmbed filloutId="cbbG8Mg1Dyus" />
+                      </DialogContent>
+                    </Dialog>
+                  </>
+                ) : (
+                  <Link href="/dashboard">
+                    <Button
+                      className="w-full"
+                      variant={index === 1 ? "default" : "outline"}
+                    >
+                      Get Started
+                    </Button>
+                  </Link>
+                )}
               </CardFooter>
             </Card>
           ))}
