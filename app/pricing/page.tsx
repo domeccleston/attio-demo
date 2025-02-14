@@ -21,13 +21,7 @@ import { plans } from "@/data/plans";
 import { Footer } from "@/components/marketing/footer";
 import { Navigation } from "@/components/marketing/navigation";
 
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 export default function PricingPage() {
   const [billingPeriod, setBillingPeriod] = useState<"monthly" | "annual">(
