@@ -1,0 +1,75 @@
+Record ID,Record,Users,Deals,Company,Plan,Seats,utm_source,utm_medium,utm_campaign,utm_content,utm_term
+001f4b6a-8abe-5622-95d3-69ccab64d0b4,Glow AI,"nina.chen@glow.com,ava.kumar@glow.com,anna.kumar@glow.com",Attio – inbound,Glow Communications,Free,,twitter,organic,summer_promo,comparison_table,attio_vs
+0020fb39-fdf6-57f4-bcb0-1a6101f0f561,Volt Solutions,"chris.davis@volt.com,maria.garcia@volt.com",,Volt,Free,,linkedin,cpc,summer_promo,case_study,deal_tracking
+005cedbb-4852-54b6-8078-dfe150b55962,Nova Solutions,lisa.wang@nova.com,Nova Solutions – PQL,Nova - Community Association Management,Pro,2.0,producthunt,cpc,migration_guide,ebook,workspace_tools
+027c7649-5a6a-5b9e-94b0-52c06b8099c9,Keen,alex.wang@keen.com,,Keen.com,Free,,reddit,content,migration_guide,case_study,modern_crm
+0d31a5a2-55a4-5f93-8c93-888f986be7d2,Iris Studio,maya.singh@iris.com,,IRIS Centre,Free,,linkedin,email,startup_tools,webinar,crm_alternative
+0f2d892a-11e4-524d-874c-d23a612d348f,Quest,david.li@quest.com,,Quest Software,Free,,saaster,community,launch,founder_story,workspace_tools
+10ddd3ed-be7c-5961-9df7-8b7e4e65b4d2,Iris,,,IRIS Centre,Free,,twitter,organic,series_a,webinar,workspace_tools
+1f1e4291-e72c-5556-b221-2daa88434e5d,Bolt,sarah.davis@bolt.com,,Bolt,Free,,google,social,startup_tools,webinar,sales_workspace
+2193e0a7-b1c6-506c-8651-f801ad0207a1,Wave Labs,,,WAVE,Free,,reddit,social,launch,demo_video,deal_tracking
+21cef248-c797-5633-996d-159f75f3d2e0,Pulse Data,,,Pulse 2.0,Free,,podcast,community,launch,infographic,crm_alternative
+2478f744-2592-5da8-a233-ce92c802c60b,Accel,"maya.kumar@accel.com,maya.kim@accel.com",,Accel,Pro,,reddit,email,product_demo,infographic,workspace_tools
+2654ab12-3644-5c69-8ca6-55c3353e63e3,Riot Systems,"anna.johnson@riot.com,zoe.johnson@riot.com",,Riot Comedy Club,Free,,ycombinator,content,migration_guide,comparison_table,attio_vs
+31706b93-8d9d-5846-999d-32d6eb560b05,Keen Data,,,Keen.com,Enterprise,,reddit,email,crm_guide,case_study,startup_crm
+3475a4c8-672c-5dc4-b3b0-9b93e161ac3c,Wave Data,"maya.zhang@wave.com,michael.wang@wave.com",,WAVE,Pro,,ycombinator,content,launch,webinar,attio_vs
+361da0a3-8493-51b6-b3fb-3f7d86a10431,Helix Software,,,Helix,Pro,,podcast,content,competitor_alternative,demo_video,deal_tracking
+38a7ac50-5560-5c8b-81b8-2306ae3323f7,Bolt Solutions,,,Bolt,Free,,ycombinator,community,startup_tools,founder_story,deal_tracking
+3966e6af-c403-5d5a-90de-63b227d94009,Jolt Data,tom.davis@jolt.com,,Journey,Free,,techcrunch,email,migration_guide,founder_story,deal_tracking
+3ad8b574-1bee-5c33-b151-2d6928c5a76e,Sage,"john.wang@sage.com,raj.smith@sage.com",,7Sage,Free,,techcrunch,cpc,series_a,case_study,workspace_tools
+40552c99-5dcb-5e9a-843c-74738b024049,Volt,michael.zhang@volt.com,,Volt,Free,,ycombinator,social,summer_promo,comparison_table,attio_vs
+443758a9-7608-5107-9fe6-b79943215ddb,Riot Tech,"emma.kim@riot.com,raj.chen@riot.com,maya.brown@riot.com",,Riot Comedy Club,Free,,podcast,email,summer_promo,infographic,workspace_tools
+48ae4bb2-3f7e-5c25-b066-2722336db5b3,Helix,michael.lee@helix.com,,Helix,Free,,google,content,summer_promo,founder_story,deal_tracking
+4a27a4b6-17dc-5048-a8c0-c9fe9573efda,Helix Works,"lisa.chen@helix.com,anna.zhang@helix.com",,Helix,Pro,,reddit,cpc,startup_tools,case_study,crm_alternative
+4a949fbd-0f5e-52c9-8eef-c0ae876239ee,Sage Data,"james.shah@sage.com,sofia.patel@sage.com",,7Sage,Pro,,linkedin,organic,migration_guide,webinar,attio_vs
+4e711a52-bdc3-5336-a1d1-5ad6cf7ab4d1,Nova Data,,,Fashion Nova,Free,,twitter,community,summer_promo,founder_story,deal_tracking
+5574b4cd-810e-5873-bb26-0e12e395d68b,Cosmic,,,Grupo Cosmic,Free,,google,social,crm_guide,founder_story,modern_crm
+5ba3d6a6-6986-5d7a-8df0-3b50ce8b6cb3,Orbit,maya.johnson@orbit.com,,Orbit,Pro,,podcast,content,launch,webinar,crm_alternative
+68171a02-5b32-5498-8924-abb5f22bcbff,Bolt Data,"michael.zhang@bolt.com,david.johnson@bolt.com,anna.li@bolt.com",,Bolt,Free,,producthunt,social,summer_promo,webinar,deal_tracking
+6a7677f8-54f2-54d4-8db8-28840f95d0dc,Terra,"lisa.davis@terra.com,james.patel@terra.com,anna.wang@terra.com",,Terra,Free,,reddit,referral,product_demo,founder_story,startup_crm
+6c75c8e4-ccac-59ec-b3be-a29e5bbdf2d2,Iris Software,michael.shah@iris.com,,Iris,Pro,,saaster,cpc,crm_guide,infographic,modern_crm
+72ccdec7-0e81-5630-af43-a057b762943b,Yield Tech,john.lee@yield.com,,Yield Communications,Free,,saaster,organic,product_demo,demo_video,attio_vs
+73818292-5c38-57cc-beba-1eba47b13471,Cosmic Systems,ava.zhang@cosmic.com,,Grupo Cosmic,Pro,,reddit,organic,startup_tools,case_study,workspace_tools
+765c9e97-8454-5691-8b3b-4ac30eb9063f,Iris Solutions,nina.johnson@iris.com,,Iris,Pro,,podcast,cpc,summer_promo,webinar,attio_vs
+77293799-5575-5e45-b1e5-dc3d9a6e6984,Unity,anna.johnson@unity.com,,,Free,,saaster,organic,product_demo,webinar,deal_tracking
+773de56b-02bd-5f53-bb4e-60cf675e496f,Zoom,raj.shah@zoom.com,,ZOOM.COM.NG,Free,,ycombinator,content,launch,demo_video,modern_crm
+77a80bcf-0af4-5d40-8e0e-337f44da2095,Drift,michael.rodriguez@drift.com,,Salesloft,Free,,reddit,email,competitor_alternative,founder_story,crm_alternative
+7ae21013-2eee-59ac-8a49-522230063caf,Lunar Data,,,LUNAR,Free,,ycombinator,email,crm_guide,founder_story,attio_vs
+81eff7cc-ea84-5464-8f20-024e8bb8b4f1,Xenon Labs,,,Sanan Media,Free,,blog,email,migration_guide,founder_story,workspace_tools
+86c14c5d-6833-5b7f-b8a8-b2552869abcb,Xenon,sam.davis@xenon.com,,Sanan Media,Enterprise,,blog,organic,migration_guide,webinar,sales_workspace
+8b8e6a97-2b14-5bbd-ad24-a9f2375d2943,Glow Solutions,"lisa.li@glow.com,anna.martinez@glow.com",,Glow Communications,Free,,saaster,organic,migration_guide,founder_story,attio_vs
+8e7a8dd5-4bb2-55c0-b0f3-2981d10324e8,Keen Works,david.rodriguez@keen.com,,Keen.com,Pro,,producthunt,community,startup_tools,demo_video,attio_vs
+8f16f212-7232-5f8e-a796-57e7089f546c,Accel Studio,,,Accel,Enterprise,,ycombinator,cpc,summer_promo,founder_story,attio_vs
+91fa131d-11d4-50aa-aa4f-3ec882c7fc9d,Mist Studio,"maria.chen@mist.com,raj.garcia@mist.com,raj.wang@mist.com",,Mist,Free,,linkedin,content,migration_guide,founder_story,attio_vs
+92bd24ba-0c54-50a4-91f4-a310d5f75916,Jolt Systems,"emma.patel@jolt.com,nina.johnson@jolt.com,ava.davis@jolt.com",,Jolt Software,Free,,google,referral,launch,ebook,workspace_tools
+93fdffdb-b379-5e59-9636-33f6da0f22ee,Bolt AI,dan.wang@bolt.com,,Bolt,Free,,linkedin,email,crm_guide,demo_video,sales_workspace
+984bee63-3732-50a3-8203-eb1046a5e53e,Drift Software,"anna.garcia@drift.com,alex.rodriguez@drift.com",,Salesloft,Pro,,reddit,referral,migration_guide,webinar,workspace_tools
+9f00919e-7d14-5088-bee8-1089b3f7734c,Helix Labs,"alex.martinez@helix.com,dan.lee@helix.com",,Helix,Free,,producthunt,content,product_demo,infographic,sales_workspace
+9f66519b-97d7-5010-a6e4-b6b43797c095,Flux Tech,,,9flux,Free,,ycombinator,community,startup_tools,webinar,attio_vs
+a04c89df-806f-57d3-a355-4fc77b936c3b,Riot,"sam.davis@riot.com,dan.brown@riot.com",,Riot Comedy Club,Free,,google,cpc,launch,infographic,modern_crm
+a281e8de-4f4c-5a43-bbed-da521d792ba2,Drift Systems,"james.kumar@drift.com,raj.rodriguez@drift.com",,Salesloft,Enterprise,,reddit,email,summer_promo,founder_story,attio_vs
+a652e27a-da80-564d-a34f-de44e7ad50a5,Terra Works,"sarah.garcia@terra.com,maria.smith@terra.com",,Terra,Free,,blog,content,summer_promo,infographic,deal_tracking
+a86e1e63-e5e7-51ee-ae41-25001db3da42,Yield,james.li@yield.com,,Yield Communications,Free,,blog,social,product_demo,comparison_table,modern_crm
+b0b077ba-6c07-548e-980d-aa9ba49c2116,Orbit Labs,,,Orbit,Free,,blog,email,series_a,comparison_table,startup_crm
+b24efc18-aa85-58b1-8045-6c391dbc6149,Wave Software,"anna.kumar@wave.com,dan.rodriguez@wave.com",,WAVE,Enterprise,,podcast,community,migration_guide,webinar,modern_crm
+b48cd767-bf28-5935-ac9e-745a4c7b673f,Glow,,,Glow Communications,Free,,podcast,content,summer_promo,demo_video,workspace_tools
+b734ffbf-89fa-570d-8dec-fae04aa1d9c4,Echo AI,chris.martinez@echo.com,,Echo Global Logistics,Free,,linkedin,email,competitor_alternative,founder_story,workspace_tools
+b7de195e-a27f-5501-9016-52e926ec33c2,Iris Tech,zoe.johnson@iris.com,,Iris,Pro,,twitter,social,crm_guide,demo_video,modern_crm
+be62af87-47a2-5d2b-8db0-62c0da318073,Mist Systems,"nina.singh@mist.com,maya.singh@mist.com",,Mist,Pro,,blog,email,startup_tools,case_study,crm_alternative
+c1e47b3c-4896-5898-bf65-10917470086a,Nova AI,michael.williams@nova.com,,Nova - Community Association Management,Pro,,blog,organic,crm_guide,ebook,startup_crm
+c4bd82bc-f2e1-5c1a-b31e-18c373699bfd,Nova Works,raj.brown@nova.com,,Nova - Community Association Management,Free,,saaster,social,launch,comparison_table,modern_crm
+d724da99-c99a-5877-9f93-b20990d7db31,Echo Works,emma.zhang@echo.com,,Echo Global Logistics,Free,,google,email,crm_guide,founder_story,crm_alternative
+da86837c-e379-53eb-a372-9d27101418f8,Orbit Works,"ava.martinez@orbit.com,emma.patel@orbit.com",,Orbit,Pro,,google,community,series_a,webinar,crm_alternative
+e0ba032d-04ae-5069-a015-18d98cc3677c,Flux,"nina.kumar@flux.com,ava.chen@flux.com",,9flux,Pro,,podcast,email,summer_promo,demo_video,deal_tracking
+e62ddea2-21dc-5e48-9e9c-9966b8b1cbe0,Jolt,,,Jolt Software,Pro,,podcast,organic,summer_promo,founder_story,workspace_tools
+e8ac6db2-ccca-5862-afa5-2c38c8a4dc5a,Lunar Tech,,,Lullwater & Co,Pro,,twitter,community,competitor_alternative,infographic,startup_crm
+ecd9dcee-0005-512e-8854-68c2a17354c6,Orbit Software,"anna.martinez@orbit.com,maya.martinez@orbit.com",,Orbit,Free,,twitter,content,series_a,infographic,deal_tracking
+ecee8846-7fb0-5321-b680-8a3d94166460,Unity Systems,,,Unity Communications,Pro,,saaster,email,migration_guide,comparison_table,deal_tracking
+eeb3ac76-2122-5a70-b03f-c90277fd6711,Wave,tom.lee@wave.com,,WAVE,Free,,blog,organic,crm_guide,founder_story,modern_crm
+f16342bf-f8ac-5bd7-a152-5574b942df19,Pulse,emma.lee@pulse.com,,Pulse,Free,,techcrunch,community,migration_guide,founder_story,sales_workspace
+f26bca5e-ab04-5085-850a-dea8d30a0015,Pulse Labs,"ava.williams@pulse.com,maria.kim@pulse.com,emma.singh@pulse.com",,Pulse,Free,,linkedin,cpc,series_a,demo_video,modern_crm
+f656633c-dbdf-580b-8916-4586d6263cdc,Echo,,,Echo Global Logistics,Free,,google,content,crm_guide,webinar,deal_tracking
+f76535d8-1c48-5891-b6d8-239bad268f97,Wave AI,lisa.singh@wave.com,,Wave Mobile Money,Free,,linkedin,referral,crm_guide,comparison_table,crm_alternative
+f8b4365b-b1d5-5a27-ad9d-2034f79ddbb1,Yield Design,sam.williams@yield.com,,AdMedia,Pro,,producthunt,email,summer_promo,founder_story,sales_workspace
+fa41d4f1-038a-5ecb-8d6d-5fc3e0d16960,Lunar,,,LUNAR,Enterprise,,reddit,content,summer_promo,demo_video,crm_alternative
+fd5ed5a5-1b40-5d77-b01c-ef826a97f591,Unity Labs,anna.jones@unity.com,,Unity,Free,,google,cpc,series_a,ebook,modern_crm

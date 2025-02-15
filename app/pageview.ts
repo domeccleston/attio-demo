@@ -71,6 +71,22 @@ export function PostHogPageView(): null {
     }
   }, [pathname, searchParams, posthog]);
 
+  // Anonymous user handling
+  useEffect(() => {
+    if (!isSignedIn && posthog && !posthog._isIdentified()) {
+      // Only set a new anonymous ID if we don't already have one
+      // This will persist for the browsing session but reset when browser is closed
+      // due to being in sessionStorage
+      let anonymousId = sessionStorage.getItem("ph_anonymous_id");
+      if (!anonymousId) {
+        anonymousId = Math.random().toString(36).substring(2);
+        sessionStorage.setItem("ph_anonymous_id", anonymousId);
+        posthog.reset();
+        posthog.identify(anonymousId);
+      }
+    }
+  }, [isSignedIn, posthog]);
+
   // User identification with UTM params
   useEffect(() => {
     if (isSignedIn && userId && user && !posthog._isIdentified()) {
