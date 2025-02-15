@@ -1,34 +1,11 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect } from "react";
 import { usePostHog } from "posthog-js/react";
 import { useAuth, useUser, useOrganization } from "@clerk/nextjs";
 
 export function PostHogPageView(): null {
-  const PERSONAL_EMAIL_DOMAINS = useMemo(
-    () =>
-      new Set([
-        "gmail.com",
-        "yahoo.com",
-        "hotmail.com",
-        "outlook.com",
-        "aol.com",
-        "icloud.com",
-        "proton.me",
-      ]),
-    []
-  );
-
-  const extractCompanyDomain = useCallback(
-    (email?: string): string | null => {
-      if (!email) return null;
-      const domain = email.split("@")[1];
-      return domain && !PERSONAL_EMAIL_DOMAINS.has(domain) ? domain : null;
-    },
-    [PERSONAL_EMAIL_DOMAINS]
-  );
-
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const posthog = usePostHog();
@@ -78,13 +55,14 @@ export function PostHogPageView(): null {
 
       posthog.identify(userId, {
         email: user.primaryEmailAddress?.emailAddress,
+        username: user.username,
         // Add UTM params if present
         ...(utmParams && {
-          utmSource: utmParams.utm_source,
-          utmMedium: utmParams.utm_medium,
-          utmCampaign: utmParams.utm_campaign,
-          utmTerm: utmParams.utm_term,
-          utmContent: utmParams.utm_content,
+          initial_utm_source: utmParams.utm_source,
+          initial_utm_medium: utmParams.utm_medium,
+          initial_utm_campaign: utmParams.utm_campaign,
+          initial_utm_term: utmParams.utm_term,
+          initial_utm_content: utmParams.utm_content,
         }),
       });
     }
@@ -97,25 +75,19 @@ export function PostHogPageView(): null {
 
       posthog.group("organization", organization.id, {
         name: organization.name,
-        domain: extractCompanyDomain(user?.primaryEmailAddress?.emailAddress),
+        created_at: organization.createdAt,
+        membership_limit: organization.membersCount,
         // Add UTM params if present
         ...(utmParams && {
-          utmSource: utmParams.utm_source,
-          utmMedium: utmParams.utm_medium,
-          utmCampaign: utmParams.utm_campaign,
-          utmTerm: utmParams.utm_term,
-          utmContent: utmParams.utm_content,
+          initial_utm_source: utmParams.utm_source,
+          initial_utm_medium: utmParams.utm_medium,
+          initial_utm_campaign: utmParams.utm_campaign,
+          initial_utm_term: utmParams.utm_term,
+          initial_utm_content: utmParams.utm_content,
         }),
       });
     }
-  }, [
-    extractCompanyDomain,
-    getUtmParams,
-    organization,
-    posthog,
-    searchParams,
-    user?.primaryEmailAddress?.emailAddress,
-  ]); // Added searchParams dependency
+  }, [getUtmParams, organization, posthog, searchParams]); // Added searchParams dependency
 
   return null;
 }
