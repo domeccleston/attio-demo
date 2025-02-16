@@ -50,11 +50,12 @@ export function PostHogPageView(): null {
     }
   }, [pathname, searchParams, posthog]);
 
-  // User identification with UTM params
+  // User identification
   useEffect(() => {
     if (isSignedIn && userId && user && !posthog._isIdentified()) {
       posthog.identify(userId, {
         email: user.primaryEmailAddress?.emailAddress,
+        last_login_date: new Date().toISOString(),
       });
     }
   }, [posthog, user, searchParams, isSignedIn, userId]); // Added searchParams dependency
