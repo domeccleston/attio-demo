@@ -37,27 +37,6 @@ export function PostHogPageView(): null {
   const { user } = useUser();
   const { organization } = useOrganization();
 
-  // Extract UTM parameters from URL
-  const getUtmParams = useCallback(() => {
-    const utmParams: Record<string, string> = {};
-    const utmFields = [
-      "utm_source",
-      "utm_medium",
-      "utm_campaign",
-      "utm_term",
-      "utm_content",
-    ];
-
-    utmFields.forEach((field) => {
-      const value = searchParams.get(field);
-      if (value) {
-        utmParams[field] = value;
-      }
-    });
-
-    return Object.keys(utmParams).length > 0 ? utmParams : null;
-  }, [searchParams]);
-
   // Page view tracking
   useEffect(() => {
     if (pathname && posthog) {
@@ -74,47 +53,34 @@ export function PostHogPageView(): null {
   // User identification with UTM params
   useEffect(() => {
     if (isSignedIn && userId && user && !posthog._isIdentified()) {
-      const utmParams = getUtmParams();
-
       posthog.identify(userId, {
         email: user.primaryEmailAddress?.emailAddress,
-        // Add UTM params if present
-        ...(utmParams && {
-          utmSource: utmParams.utm_source,
-          utmMedium: utmParams.utm_medium,
-          utmCampaign: utmParams.utm_campaign,
-          utmTerm: utmParams.utm_term,
-          utmContent: utmParams.utm_content,
-        }),
       });
     }
-  }, [posthog, user, searchParams, isSignedIn, userId, getUtmParams]); // Added searchParams dependency
+  }, [posthog, user, searchParams, isSignedIn, userId]); // Added searchParams dependency
 
   // Workspace/organization identification with UTM params
   useEffect(() => {
     if (organization && posthog) {
-      const utmParams = getUtmParams();
-
+      console.log("group", {
+        id: organization.id,
+        name: organization.name,
+        domain: extractCompanyDomain(user?.primaryEmailAddress?.emailAddress),
+      });
       posthog.group("organization", organization.id, {
         name: organization.name,
         domain: extractCompanyDomain(user?.primaryEmailAddress?.emailAddress),
+        userId: userId,
         // Add UTM params if present
-        ...(utmParams && {
-          utmSource: utmParams.utm_source,
-          utmMedium: utmParams.utm_medium,
-          utmCampaign: utmParams.utm_campaign,
-          utmTerm: utmParams.utm_term,
-          utmContent: utmParams.utm_content,
-        }),
       });
     }
   }, [
     extractCompanyDomain,
-    getUtmParams,
     organization,
     posthog,
     searchParams,
     user?.primaryEmailAddress?.emailAddress,
+    userId,
   ]); // Added searchParams dependency
 
   return null;
