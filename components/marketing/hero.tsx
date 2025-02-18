@@ -15,9 +15,7 @@ export function Hero() {
           </span>
         </h1>
         <p className="text-md md:text-lg lg:text-xl text-center text-gray-700 max-w-2xl mx-auto mb-8">
-          Inference at scale, in our cloud or yours. Built for performance,
-          security, and reliability—with a developer experience you&apos;ll
-          love.
+          The fastest way to deploy and scale your ML models.
         </p>
       </div>
       <div className="flex justify-center space-x-4">
