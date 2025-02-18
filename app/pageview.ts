@@ -62,7 +62,7 @@ export function PostHogPageView(): null {
 
   // Workspace/organization identification with UTM params
   useEffect(() => {
-    if (organization && posthog) {
+    if (organization && posthog && !posthog._isIdentified()) {
       console.log("group", {
         id: organization.id,
         name: organization.name,
