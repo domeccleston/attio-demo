@@ -58,9 +58,9 @@ export function PostHogPageView(): null {
         last_login_date: new Date().toISOString(),
       });
     }
-  }, [posthog, user, searchParams, isSignedIn, userId]); // Added searchParams dependency
+  }, [posthog, user, searchParams, isSignedIn, userId]);
 
-  // Workspace/organization identification with UTM params
+  // Workspace/organization identification 
   useEffect(() => {
     if (organization && posthog && !posthog._isIdentified()) {
       console.log("group", {
@@ -72,7 +72,6 @@ export function PostHogPageView(): null {
         name: organization.name,
         domain: extractCompanyDomain(user?.primaryEmailAddress?.emailAddress),
         userId: userId,
-        // Add UTM params if present
       });
     }
   }, [
